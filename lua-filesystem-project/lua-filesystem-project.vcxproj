@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -101,7 +101,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -116,7 +116,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -131,7 +131,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -144,10 +144,63 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="exports.cpp" />
+    <ClCompile Include="lua-5.1.5\src\lapi.c" />
+    <ClCompile Include="lua-5.1.5\src\lauxlib.c" />
+    <ClCompile Include="lua-5.1.5\src\lbaselib.c" />
+    <ClCompile Include="lua-5.1.5\src\lcode.c" />
+    <ClCompile Include="lua-5.1.5\src\ldblib.c" />
+    <ClCompile Include="lua-5.1.5\src\ldebug.c" />
+    <ClCompile Include="lua-5.1.5\src\ldo.c" />
+    <ClCompile Include="lua-5.1.5\src\ldump.c" />
+    <ClCompile Include="lua-5.1.5\src\lfunc.c" />
+    <ClCompile Include="lua-5.1.5\src\lgc.c" />
+    <ClCompile Include="lua-5.1.5\src\linit.c" />
+    <ClCompile Include="lua-5.1.5\src\liolib.c" />
+    <ClCompile Include="lua-5.1.5\src\llex.c" />
+    <ClCompile Include="lua-5.1.5\src\lmathlib.c" />
+    <ClCompile Include="lua-5.1.5\src\lmem.c" />
+    <ClCompile Include="lua-5.1.5\src\loadlib.c" />
+    <ClCompile Include="lua-5.1.5\src\lobject.c" />
+    <ClCompile Include="lua-5.1.5\src\lopcodes.c" />
+    <ClCompile Include="lua-5.1.5\src\loslib.c" />
+    <ClCompile Include="lua-5.1.5\src\lparser.c" />
+    <ClCompile Include="lua-5.1.5\src\lstate.c" />
+    <ClCompile Include="lua-5.1.5\src\lstring.c" />
+    <ClCompile Include="lua-5.1.5\src\lstrlib.c" />
+    <ClCompile Include="lua-5.1.5\src\ltable.c" />
+    <ClCompile Include="lua-5.1.5\src\ltablib.c" />
+    <ClCompile Include="lua-5.1.5\src\ltm.c" />
+    <ClCompile Include="lua-5.1.5\src\lundump.c" />
+    <ClCompile Include="lua-5.1.5\src\lvm.c" />
+    <ClCompile Include="lua-5.1.5\src\lzio.c" />
+    <ClCompile Include="lua-5.1.5\src\print.c" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="exports.hpp" />
+    <ClInclude Include="lua-5.1.5\src\lapi.h" />
+    <ClInclude Include="lua-5.1.5\src\lauxlib.h" />
+    <ClInclude Include="lua-5.1.5\src\lcode.h" />
+    <ClInclude Include="lua-5.1.5\src\ldebug.h" />
+    <ClInclude Include="lua-5.1.5\src\ldo.h" />
+    <ClInclude Include="lua-5.1.5\src\lfunc.h" />
+    <ClInclude Include="lua-5.1.5\src\lgc.h" />
+    <ClInclude Include="lua-5.1.5\src\llex.h" />
+    <ClInclude Include="lua-5.1.5\src\llimits.h" />
+    <ClInclude Include="lua-5.1.5\src\lmem.h" />
+    <ClInclude Include="lua-5.1.5\src\lobject.h" />
+    <ClInclude Include="lua-5.1.5\src\lopcodes.h" />
+    <ClInclude Include="lua-5.1.5\src\lparser.h" />
+    <ClInclude Include="lua-5.1.5\src\lstate.h" />
+    <ClInclude Include="lua-5.1.5\src\lstring.h" />
+    <ClInclude Include="lua-5.1.5\src\ltable.h" />
+    <ClInclude Include="lua-5.1.5\src\ltm.h" />
+    <ClInclude Include="lua-5.1.5\src\lua.h" />
+    <ClInclude Include="lua-5.1.5\src\luaconf.h" />
+    <ClInclude Include="lua-5.1.5\src\lualib.h" />
+    <ClInclude Include="lua-5.1.5\src\lundump.h" />
+    <ClInclude Include="lua-5.1.5\src\lvm.h" />
+    <ClInclude Include="lua-5.1.5\src\lzio.h" />
     <ClInclude Include="utilities.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

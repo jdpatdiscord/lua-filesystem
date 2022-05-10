@@ -8,6 +8,18 @@
 #include <locale>
 #include <codecvt>
 
+#define LUA_5_1_5
+
+#if defined(LUA_5_1_5)
+extern "C" {
+#include "lua-5.1.5/src/luaconf.h"
+#include "lua-5.1.5/src/lua.h"
+#include "lua-5.1.5/src/lualib.h"
+#include "lua-5.1.5/src/lobject.h"
+#include "lua-5.1.5/src/lauxlib.h"
+};
+#endif
+
 #include "utilities.hpp"
 
 #if defined(_WIN32)
@@ -35,14 +47,14 @@ struct PathValidationResult
 	std::filesystem::path working_directory;
 };
 
-LFS_PLATFORM_EXPORT int lfs_writefile(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_appendfile(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_readfile(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_delfile(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_delfolder(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_isfile(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_isfolder(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_loadfile(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_dofile(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_listfiles(uintptr_t lua_state);
-LFS_PLATFORM_EXPORT int lfs_makefolder(uintptr_t lua_state);
+LFS_PLATFORM_EXPORT int lfs_writefile(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_appendfile(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_readfile(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_delfile(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_delfolder(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_isfile(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_isfolder(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_loadfile(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_dofile(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_listfiles(lua_State* lua_state);
+LFS_PLATFORM_EXPORT int lfs_makefolder(lua_State* lua_state);
