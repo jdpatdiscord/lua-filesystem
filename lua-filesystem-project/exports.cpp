@@ -245,14 +245,79 @@ int lfs_isfolder(lua_State* lua_state)
 
 int lfs_loadfile(lua_State* lua_state)
 {
-	// Implementation defined
-	return 0; // function?
+	luaL_checkstring(lua_state, 1);
+	auto path_result = validate_path(lua_tostring(lua_state, 1));
+	if (path_result.is_valid_path == true)
+	{
+		auto& user_path = path_result.path;
+		if (std::filesystem::exists(user_path) && std::filesystem::is_regular_file(user_path))
+		{
+			std::ifstream F(user_path, std::ios::binary);
+			if (F.is_open())
+			{
+				size_t file_size = std::filesystem::file_size(user_path);
+				char* file_buffer = (char*)malloc(file_size);
+				if (file_buffer != NULL)
+				{
+					F.read(file_buffer, file_size);
+					F.close();
+
+					//lua_pushlstring(lua_state, (const char*)file_buffer, file_size);
+					luaL_loadbuffer(lua_state, file_buffer, file_size, "@chunk.lua");
+					free(file_buffer);
+					return 1;
+				}
+				else
+				{
+					F.close();
+					throw std::runtime_error("could not allocate buffer for file");
+				}
+			}
+			else throw std::runtime_error("could not open file");
+		}
+		else throw std::runtime_error("file does not exist or it is not a file");
+	}
+	lua_pushnil(lua_state);
+	return 1;
 };
 
 int lfs_dofile(lua_State* lua_state)
 {
-	// Implementation defined
-	return 0;
+	luaL_checkstring(lua_state, 1);
+	auto path_result = validate_path(lua_tostring(lua_state, 1));
+	if (path_result.is_valid_path == true)
+	{
+		auto& user_path = path_result.path;
+		if (std::filesystem::exists(user_path) && std::filesystem::is_regular_file(user_path))
+		{
+			std::ifstream F(user_path, std::ios::binary);
+			if (F.is_open())
+			{
+				size_t file_size = std::filesystem::file_size(user_path);
+				char* file_buffer = (char*)malloc(file_size);
+				if (file_buffer != NULL)
+				{
+					F.read(file_buffer, file_size);
+					F.close();
+
+					//lua_pushlstring(lua_state, (const char*)file_buffer, file_size);
+					luaL_loadbuffer(lua_state, file_buffer, file_size, "@chunk.lua");
+					lua_pcall(lua_state, 0, 0, 0);
+					free(file_buffer);
+					return 1;
+				}
+				else
+				{
+					F.close();
+					throw std::runtime_error("could not allocate buffer for file");
+				}
+			}
+			else throw std::runtime_error("could not open file");
+		}
+		else throw std::runtime_error("file does not exist or it is not a file");
+	}
+	lua_pushnil(lua_state);
+	return 1;
 };
 
 int lfs_listfiles(lua_State* lua_state)
@@ -264,19 +329,21 @@ int lfs_listfiles(lua_State* lua_state)
 		auto& user_path = path_result.path;
 		if (std::filesystem::exists(user_path) && std::filesystem::is_directory(user_path))
 		{
-			lua_createtable(lua_state, 0, 0);
-			int table_index = 0;
-			for (const auto& sub_object : std::filesystem::directory_iterator{ user_path })
+			if (!std::filesystem::equivalent(path_result.working_directory.parent_path(), user_path))
 			{
-				auto object_name = sub_object.path().u8string();
-				object_name.erase(0, path_result.working_directory.u8string().size() + 1);
+				lua_createtable(lua_state, 0, 0);
+				int table_index = 0;
+				for (const auto& sub_object : std::filesystem::directory_iterator{ user_path })
+				{
+					auto object_name = sub_object.path().u8string();
+					object_name.erase(0, path_result.working_directory.u8string().size() + 1);
 
-				lua_pushnumber(lua_state, ++table_index);
-				lua_pushstring(lua_state, (const char*)object_name.c_str());
-				lua_rawset(lua_state, -3);
+					lua_pushnumber(lua_state, ++table_index);
+					lua_pushstring(lua_state, (const char*)object_name.c_str());
+					lua_rawset(lua_state, -3);
+				}
+				return 1;
 			}
-
-			return 1;
 		}
 		else throw std::runtime_error("file system object does not exist or is not directory");
 	}
@@ -315,6 +382,8 @@ int main()
 	lua_setfield(L, LUA_GLOBALSINDEX, "readfile");
 	lua_pushcfunction(L, lfs_writefile);
 	lua_setfield(L, LUA_GLOBALSINDEX, "writefile");
+	lua_pushcfunction(L, lfs_appendfile);
+	lua_setfield(L, LUA_GLOBALSINDEX, "appendfile");
 	lua_pushcfunction(L, lfs_listfiles);
 	lua_setfield(L, LUA_GLOBALSINDEX, "listfiles");
 	lua_pushcfunction(L, lfs_delfolder);
@@ -323,13 +392,29 @@ int main()
 	lua_setfield(L, LUA_GLOBALSINDEX, "dofile");
 	lua_pushcfunction(L, lfs_loadfile);
 	lua_setfield(L, LUA_GLOBALSINDEX, "loadfile");
+	lua_pushcfunction(L, lfs_listfiles);
+	lua_setfield(L, LUA_GLOBALSINDEX, "listfiles");
 
-	luaL_loadstring(L, "print(\"Hello, World!\")");
+	luaL_loadstring(L, R"(
+		writefile("hello.txt", "Hi friends!")
+		print(readfile("hello.txt"))
+		appendfile("hello.txt", " Live free or die!")
+		print(readfile("hello.txt"))
+		delfile("hello.txt")
+		
+		writefile("test.lua", "print\"This should print twice.\"")
+		local F = loadfile("test.lua")
+		print(F)
+		F()
+		dofile("test.lua")
+
+		table.foreach(listfiles'.', print)
+
+		delfile("test.lua")
+	)");
 	lua_call(L, 0, 0);
 
 	lua_close(L);
-
-	Sleep(1000000);
 
 	return 0;
 }
