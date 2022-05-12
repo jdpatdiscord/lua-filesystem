@@ -404,7 +404,8 @@ LFS_EXPORT int lfs_listfiles(lua_State* lua_state)
 				int table_index = 0;
 				for (const auto& sub_object : std::filesystem::directory_iterator{ user_path })
 				{
-					auto object_name = sub_object.path().filename().u8string();
+					auto object_name = sub_object.path().u8string();
+					object_name.erase(0, path_result.working_directory.u8string().size() + 1);
 
 					lua_pushnumber(lua_state, ++table_index);
 					lua_pushstring(lua_state, (const char*)object_name.c_str());
