@@ -445,28 +445,15 @@ static const luaL_Reg fs_funcs[] = {
 	{NULL, NULL}
 };
 
-#if defined(LFS_LUA_5_3)
-int internal_open_lfs(lua_State* lua_state)
-{
-	luaL_newlib(lua_state, fs_funcs);
-	return 1;
-}
-
-static const luaL_Reg single_lib[] = {
-	{"fs", internal_open_lfs}
-};
-#endif
-
 extern "C" LFS_EXPORT int luaopen_lfs(lua_State* lua_state)
 {
-#if defined(LFS_LUA_5_3)
-	const luaL_Reg* lib;
-	for (lib = single_lib; lib->func; lib++) {
-		luaL_requiref(lua_state, lib->name, lib->func, 1);
-		lua_pop(lua_state, 1);
-	}
+#if defined(LFS_LUA_5_3) || defined(LFS_LUA_5_2)
+	lua_pushglobaltable(lua_state);
+	luaL_setfuncs(lua_state, fs_funcs, 0);
 #else
-	luaL_register(lua_state, "fs", fs_funcs);
+	lua_pushvalue(lua_state, LUA_GLOBALSINDEX);
+	luaL_register(lua_state, NULL, fs_funcs);
+	lua_pop(lua_state, 1);
 #endif
 	return 1;
 }
