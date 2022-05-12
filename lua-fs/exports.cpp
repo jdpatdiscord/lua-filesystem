@@ -447,7 +447,7 @@ static const luaL_Reg fs_funcs[] = {
 
 extern "C" LFS_EXPORT int luaopen_lfs(lua_State* lua_state)
 {
-#if defined(LFS_LUA_5_3) || defined(LFS_LUA_5_2)
+#if defined(LFS_LUA_5_4) || defined(LFS_LUA_5_3) || defined(LFS_LUA_5_2)
 	lua_pushglobaltable(lua_state);
 	luaL_setfuncs(lua_state, fs_funcs, 0);
 #else

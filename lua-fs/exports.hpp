@@ -52,7 +52,11 @@
 #pragma comment(lib, "../x64/Release/lua-5.3.6.lib")
 #endif
 #elif defined(LFS_LUA_5_4)
-
+#if (INTPTR_MAX == INT32_MAX)
+#pragma comment(lib, "../Win32/Release/lua-5.4.4.lib")
+#elif (INTPTR_MAX == INT64_MAX)
+#pragma comment(lib, "../x64/Release/lua-5.4.4.lib")
+#endif
 #elif defined(LFS_LUAU)
 
 #elif defined(LFS_LUAJIT_200)

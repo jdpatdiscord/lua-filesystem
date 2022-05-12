@@ -7,6 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua-fs", "lua-fs\lua-fs.vcx
 	ProjectSection(ProjectDependencies) = postProject
 		{E91A081D-EEF0-4A1F-9E6F-8120EEFFE167} = {E91A081D-EEF0-4A1F-9E6F-8120EEFFE167}
 		{44A54263-3440-467C-9452-2EE5352998B0} = {44A54263-3440-467C-9452-2EE5352998B0}
+		{B17CE482-B5F4-47B2-A74D-A99C61079730} = {B17CE482-B5F4-47B2-A74D-A99C61079730}
 		{2CCB95C7-C3EC-49D6-9DDD-5CC679021683} = {2CCB95C7-C3EC-49D6-9DDD-5CC679021683}
 	EndProjectSection
 EndProject
@@ -20,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test-cases", "test-cases\te
 	ProjectSection(ProjectDependencies) = postProject
 		{73F2D58C-A33C-4B0F-A761-7866F2EF6CAE} = {73F2D58C-A33C-4B0F-A761-7866F2EF6CAE}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua-5.4.4", "lua-5.4.4\lua-5.4.4.vcxproj", "{B17CE482-B5F4-47B2-A74D-A99C61079730}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +72,14 @@ Global
 		{6A643798-BF10-4D8F-9899-7F9294D67E22}.Release|x64.Build.0 = Release|x64
 		{6A643798-BF10-4D8F-9899-7F9294D67E22}.Release|x86.ActiveCfg = Release|Win32
 		{6A643798-BF10-4D8F-9899-7F9294D67E22}.Release|x86.Build.0 = Release|Win32
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Debug|x64.ActiveCfg = Debug|x64
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Debug|x64.Build.0 = Debug|x64
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Debug|x86.ActiveCfg = Debug|Win32
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Debug|x86.Build.0 = Debug|Win32
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Release|x64.ActiveCfg = Release|x64
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Release|x64.Build.0 = Release|x64
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Release|x86.ActiveCfg = Release|Win32
+		{B17CE482-B5F4-47B2-A74D-A99C61079730}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
