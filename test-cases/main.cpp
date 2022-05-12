@@ -6,13 +6,17 @@ int main(int argc, char* argv[])
 	luaL_openlibs(L);
 
 	lua_getglobal(L, "print");
-	int status = luaL_loadstring(L, R"(
+/*	int status = luaL_loadstring(L, R"(
 		local dll = io.open("../x64/Release/lfs.dll", "rb")
 		local dll_data = dll:read("*a")
 		dll:close()
 		local new_dll = io.open("lfs.dll", "wb")
 		new_dll:write(dll_data)
 		new_dll:close()
+		require("lfs")
+		print(fs)
+	)");*/
+	luaL_loadstring(L, R"(
 		require("lfs")
 		print(fs)
 	)");

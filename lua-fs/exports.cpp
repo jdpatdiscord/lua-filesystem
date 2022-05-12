@@ -441,7 +441,8 @@ static const luaL_Reg fs_funcs[] = {
 	{"loadfile", lfs_loadfile},
 	{"dofile", lfs_dofile},
 	{"listfiles", lfs_listfiles},
-	{"makefolder", lfs_makefolder}
+	{"makefolder", lfs_makefolder},
+	{NULL, NULL}
 };
 
 #if defined(LFS_LUA_5_3)
@@ -456,7 +457,7 @@ static const luaL_Reg single_lib[] = {
 };
 #endif
 
-extern "C" LFS_EXPORT int luaopen_lfs(lua_State * lua_state)
+extern "C" LFS_EXPORT int luaopen_lfs(lua_State* lua_state)
 {
 #if defined(LFS_LUA_5_3)
 	const luaL_Reg* lib;
