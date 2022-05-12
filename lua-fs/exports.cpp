@@ -331,8 +331,8 @@ LFS_EXPORT int lfs_loadfile(lua_State* lua_state)
 					F.read(file_buffer, file_size);
 					F.close();
 
-					//lua_pushlstring(lua_state, (const char*)file_buffer, file_size);
-					luaL_loadbuffer(lua_state, file_buffer, file_size, "@chunk.lua");
+					auto chunkname = ("@" + user_path.filename().string());
+					luaL_loadbuffer(lua_state, file_buffer, file_size, chunkname.c_str());
 					free(file_buffer);
 					return 1;
 				}
@@ -370,7 +370,9 @@ LFS_EXPORT int lfs_dofile(lua_State* lua_state)
 					F.close();
 
 					//lua_pushlstring(lua_state, (const char*)file_buffer, file_size);
-					luaL_loadbuffer(lua_state, file_buffer, file_size, "@chunk.lua");
+					
+					auto chunkname = ("@" + user_path.filename().string());
+					luaL_loadbuffer(lua_state, file_buffer, file_size, chunkname.c_str());
 					lua_pcall(lua_state, 0, 0, 0);
 					free(file_buffer);
 					return 1;
