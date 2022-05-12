@@ -179,7 +179,7 @@ LFS_EXPORT int lfs_writefile(lua_State* lua_state)
 			F.write(data_string, data_size);
 			F.close();
 		}
-		else throw std::runtime_error("could not create or write to file");
+		else luaL_error(lua_state, "could not create or write to file");
 	}
 	return 0;
 };
@@ -203,9 +203,9 @@ LFS_EXPORT int lfs_appendfile(lua_State* lua_state)
 				F.write(data_string, data_size);
 				F.close();
 			}
-			else throw std::runtime_error("could not create or write to file");
+			else luaL_error(lua_state, "could not create or write to file");
 		}
-		else throw std::runtime_error("file does not exist or it is not a file");
+		else luaL_error(lua_state, "file does not exist or it is not a file");
 	}
 	return 0;
 };
@@ -236,12 +236,12 @@ LFS_EXPORT int lfs_readfile(lua_State* lua_state)
 				else
 				{
 					F.close();
-					throw std::runtime_error("could not allocate buffer for file");
+					luaL_error(lua_state, "could not allocate buffer for file");
 				}
 			}
-			else throw std::runtime_error("could not open file");
+			else luaL_error(lua_state, "could not open file");
 		}
-		else throw std::runtime_error("file does not exist or it is not a file");
+		else luaL_error(lua_state, "file does not exist or it is not a file");
 	}
 	lua_pushnil(lua_state);
 	return 1; // string?
@@ -258,7 +258,7 @@ LFS_EXPORT int lfs_delfile(lua_State* lua_state)
 		{
 			std::filesystem::remove(user_path);
 		}
-		else throw std::runtime_error("file does not exist or it is not a file");
+		else luaL_error(lua_state, "file does not exist or it is not a file");
 	}
 	return 0;
 };
@@ -277,7 +277,7 @@ LFS_EXPORT int lfs_delfolder(lua_State* lua_state)
 				std::filesystem::remove_all(user_path);
 			}
 		}
-		else throw std::runtime_error("file does not exist or it is not a file");
+		else luaL_error(lua_state, "file does not exist or it is not a file");
 	}
 	return 0;
 };
@@ -335,12 +335,12 @@ LFS_EXPORT int lfs_loadfile(lua_State* lua_state)
 				else
 				{
 					F.close();
-					throw std::runtime_error("could not allocate buffer for file");
+					luaL_error(lua_state, "could not allocate buffer for file");
 				}
 			}
-			else throw std::runtime_error("could not open file");
+			else luaL_error(lua_state, "could not open file");
 		}
-		else throw std::runtime_error("file does not exist or it is not a file");
+		else luaL_error(lua_state, "file does not exist or it is not a file");
 	}
 	lua_pushnil(lua_state);
 	return 1;
@@ -374,12 +374,12 @@ LFS_EXPORT int lfs_dofile(lua_State* lua_state)
 				else
 				{
 					F.close();
-					throw std::runtime_error("could not allocate buffer for file");
+					luaL_error(lua_state, "could not allocate buffer for file");
 				}
 			}
-			else throw std::runtime_error("could not open file");
+			else luaL_error(lua_state, "could not open file");
 		}
-		else throw std::runtime_error("file does not exist or it is not a file");
+		else luaL_error(lua_state, "file does not exist or it is not a file");
 	}
 	lua_pushnil(lua_state);
 	return 1;
@@ -410,7 +410,7 @@ LFS_EXPORT int lfs_listfiles(lua_State* lua_state)
 				return 1;
 			}
 		}
-		else throw std::runtime_error("file system object does not exist or is not directory");
+		else luaL_error(lua_state, "file system object does not exist or is not directory");
 	}
 	lua_pushnil(lua_state);
 	return 1;
@@ -444,6 +444,7 @@ static const luaL_Reg fs_funcs[] = {
 	{"makefolder", lfs_makefolder}
 };
 
+#if defined(LFS_LUA_5_3)
 int internal_open_lfs(lua_State* lua_state)
 {
 	luaL_newlib(lua_state, fs_funcs);
@@ -453,8 +454,9 @@ int internal_open_lfs(lua_State* lua_state)
 static const luaL_Reg single_lib[] = {
 	{"fs", internal_open_lfs}
 };
+#endif
 
-LFS_EXPORT int open_lfs(lua_State* lua_state)
+extern "C" LFS_EXPORT int luaopen_lfs(lua_State * lua_state)
 {
 #if defined(LFS_LUA_5_3)
 	const luaL_Reg* lib;

@@ -2,8 +2,6 @@
 
 #include "config.hpp"
 
-#include <stdint.h>
-
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -24,7 +22,7 @@
 #if defined(_WIN32)
 #include <Windows.h>
 #include <tchar.h>
-#define LFS_EXPORT __declspec(dllexport)
+#define LFS_EXPORT extern "C" __declspec(dllexport)
 #elif defined(__linux__)
 #define LFS_EXPORT __attribute__((visibility("default")))
 #elif defined(__APPLE__)
@@ -37,21 +35,21 @@
 
 #if defined(LFS_LUA_5_1)
 #if (INTPTR_MAX == INT32_MAX)
-#pragma comment(lib, "../lua-5.1.5/Win32/Release/lua-5.1.5.lib")
+#pragma comment(lib, "../Win32/Release/lua-5.1.5.lib")
 #elif (INTPTR_MAX == INT64_MAX)
-#pragma comment(lib, "../lua-5.1.5/x64/Release/lua-5.1.5.lib")
+#pragma comment(lib, "../x64/Release/lua-5.1.5.lib")
 #endif
 #elif defined(LFS_LUA_5_2)
 #if (INTPTR_MAX == INT32_MAX)
-#pragma comment(lib, "../lua-5.2.4/Win32/Release/lua-5.2.4.lib")
+#pragma comment(lib, "../Win32/Release/lua-5.2.4.lib")
 #elif (INTPTR_MAX == INT64_MAX)
-#pragma comment(lib, "../lua-5.2.4/x64/Release/lua-5.2.4.lib")
+#pragma comment(lib, "../x64/Release/lua-5.2.4.lib")
 #endif
 #elif defined(LFS_LUA_5_3)
 #if (INTPTR_MAX == INT32_MAX)
-#pragma comment(lib, "../lua-5.3.6/Win32/Release/lua-5.3.6.lib")
+#pragma comment(lib, "../Win32/Release/lua-5.3.6.lib")
 #elif (INTPTR_MAX == INT64_MAX)
-#pragma comment(lib, "../lua-5.3.6/x64/Release/lua-5.3.6.lib")
+#pragma comment(lib, "../x64/Release/lua-5.3.6.lib")
 #endif
 #elif defined(LFS_LUA_5_4)
 
@@ -72,7 +70,7 @@ LFS_EXPORT int lfs_loadfile(lua_State* lua_state);
 LFS_EXPORT int lfs_dofile(lua_State* lua_state);
 LFS_EXPORT int lfs_listfiles(lua_State* lua_state);
 LFS_EXPORT int lfs_makefolder(lua_State* lua_state);
-LFS_EXPORT int open_lfs(lua_State* lua_state);
+LFS_EXPORT int luaopen_lfs(lua_State* lua_state);
 
 #define LFS_WORKSPACE_DIRECTORY "workspace"
 

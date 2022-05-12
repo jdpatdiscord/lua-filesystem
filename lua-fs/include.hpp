@@ -11,4 +11,4 @@ int lfs_loadfile(lua_State* lua_state);
 int lfs_dofile(lua_State* lua_state);
 int lfs_listfiles(lua_State* lua_state);
 int lfs_makefolder(lua_State* lua_state);
-int open_lfs(lua_State* lua_state);
+int luaopen_lfs(lua_State* lua_state);
