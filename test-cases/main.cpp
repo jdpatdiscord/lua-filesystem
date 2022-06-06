@@ -41,13 +41,16 @@ int main(int argc, char* argv[])
 		delfile("test.lua")
 		
 		-- Basic sandbox testing
-
-		writefile("../test.txt", "hello")
-		assert(type(readfile("../test.txt")) == 'nil', "wrong type")
-		writefile("../workspace/test.txt", "hello")
-		assert(type(readfile("../workspace/test.txt")) == 'string', "wrong type")
-		assert(readfile("test.txt") == readfile("../workspace/test.txt"), "wrong result")
-		delfile("test.txt")
+		
+		DO_RELATIVE_TESTS = true
+		if DO_RELATIVE_TESTS == true then
+			writefile("../test.txt", "hello")
+			assert(type(readfile("../test.txt")) == 'nil', "wrong type")
+			writefile("../workspace/test.txt", "hello")
+			assert(type(readfile("../workspace/test.txt")) == 'string', "wrong type")
+			assert(readfile("test.txt") == readfile("../workspace/test.txt"), "wrong result")
+			delfile("test.txt")
+		end
 		writefile("test.exe", "text")
 		assert(not isfile("test.exe"), "wrong result")
 		writefile("test.exe.", "text")
