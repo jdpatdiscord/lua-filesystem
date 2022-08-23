@@ -1,5 +1,12 @@
 #include <stdint.h>
 
+#define USE_WHITELIST_EXT
+//#define USE_BLACKLIST_EXT
+
+#if defined(USE_WHITELIST_EXT) && defined(USE_BLACKLIST_EXT)
+#error "Cannot define both macros"
+#endif
+
 #define LFS_LUA_5_4
 
 #if defined(LFS_LUA_5_1)

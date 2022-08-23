@@ -32,7 +32,7 @@ std::wstring utf8_to_utf16(const std::string& utf8_string)
 		{
 			result_string += result_char;
 			// result returns a count of successfully converted characters in this case:
-			if (result == 0) [[unlikely]]
+			if (result == 0)
 				break;
 			temp_str_ptr += result;
 		}
@@ -55,7 +55,7 @@ std::string utf16_to_utf8(const std::wstring& utf16_string)
 	for (char16_t u16c : utf16_string)
 	{
 		auto result = c16rtomb(ccache, u16c, &state);
-		if (result == -1) [[unlikely]]
+		if (result == -1)
 			break;
 		else
 			result_string += ccache;
@@ -75,7 +75,7 @@ std::wstring platform_agnostic_findme()
 
 #elif defined(__APPLE__)
 
-#elif defined(__bsd__) || defined(__FreeBSD__) || defined(__NetBSD__)
+#elif defined(__bsd__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 
 #else
 #error "Nonsupported platform"
@@ -92,7 +92,7 @@ lfs_validation validate_path(const char* user_path)
 	}
 
 	std::filesystem::path working_directory = std::filesystem::path(application_working_directory).parent_path();
-	working_directory += L"\\" LFS_WORKSPACE_DIRECTORY;
+	working_directory += L"/" LFS_WORKSPACE_DIRECTORY;
 	std::filesystem::path user_defined_path = working_directory / utf8_to_utf16(std::string(user_path));
 
 	if (!std::filesystem::is_directory(working_directory))
@@ -104,33 +104,6 @@ lfs_validation validate_path(const char* user_path)
 		std::filesystem::create_directory(working_directory);
 	}
 
-	const std::vector<std::wstring> blacklisted_extensions = {
-		L".ace", L".ade", L".adp", L".ani", L".app", L".appcontent", L".appref", L".asp", L".aspx", L".asx",
-		L".bas", L".bat",
-		L".cdxml", L".cer", L".chm", L".cmd", L".cnt", L".com", L".cpl", L".crt", L".csh",
-		L".der", L".diagcab", L".docm",
-		L".doc", /* .doc format has RCE exploits */
-		L".exe",
-		L".fxp",
-		L".gadget", L".grp",
-		L".hlp", L".hpj", L".hta", L".htc",
-		L".inf", L".ins", L".isp", L".its",
-		L".jar", L".jnlp", L".js", L".jse",
-		L".ksh",
-		L".xls", L".xlsm", /* spreadsheets can contain macros and easily social engineer people */
-		L".lnk",
-		L".mad", L".maf", L".mag", L".mam", L".maq", L".mar", L".mas", L".mat", L".mau", L".mav", L".maw", L".mcf", L".mda", L".mdb", L".mde", L".mdt", L".mdw", L".mdz", L".mht", L".mhtml", L".ms", L".msc", L".msh", L".msh1", L".msh1xml", L".msh2", L".msh2xml", L".mshxml", L".msi", L".msp", L".mst", L".msu",
-		L".ops", L".osd",
-		L".pcd", L".pif", L".pl", L".plg", L".prf", L".prg", L".printerexport", L".ps1", L".ps1xml", L".ps2", L".ps2xml", L".psc1", L".psc2", L".psd1", L".psdm1", L".psdm1cdxml", L".pssc", L".pst", L".py", L".pyc", L".pyo", L".pyw", L".pyz", L".pyzw",
-		L".reg",
-		L".scf", L".scr", L".sct", L".settingcontent", L".shb", L".shs",
-		L".theme", L".tmp",
-		L".udl", L".url",
-		L".vb", L".vbe", L".vbp", L".vbs", L".vsmacros", L".vss", L".vst", L".vsw",
-		L".webpnp", L".website", L".ws", L".wsb", L".wsc", L".wsf", L".wsh",
-		L".xbap", L".xll", L".xml", L".xnk"
-	};
-
 	auto is_valid_extension = [&](std::wstring ext)
 	{
 		if (ext.size() == 0) return true;
@@ -139,9 +112,76 @@ lfs_validation validate_path(const char* user_path)
 		std::transform(ext.begin(), ext.end(), ext.begin(),
 			[](wchar_t c) { return std::tolower(c); });
 
-		for (auto& bext : blacklisted_extensions)
-			if (ext == bext)
+#if defined(USE_WHITELIST_EXT)
+		const std::vector<std::wstring> whitelisted_extensions = {
+			L".txt",
+			L".csv",
+			L".bin",
+			L".md",
+			L".lua"
+		};
+
+		bool allowed = false;
+		for (auto& o_ext : whitelisted_extensions)
+		{
+			if (ext == o_ext)
+			{
+				allowed = true;
+				break;
+			}
+		}
+		if (!allowed)
+			return false;
+
+#elif defined(USE_BLACKLIST_EXT)
+		const std::vector<std::wstring> blacklisted_extensions = {
+			L".ace", L".ade", L".adp", L".ani", L".app", L".appcontent", L".appref", L".asp", L".aspx", L".asx",
+			L".bas", L".bat",
+			L".cdxml", L".cer", L".chm", L".cmd", L".cnt", L".com", L".cpl", L".crt", L".csh",
+			L".der", L".diagcab", L".docm",
+			L".doc", /* .doc format has RCE exploits */
+			L".exe",
+			L".fxp",
+			L".gadget", L".grp",
+			L".hlp", L".hpj", L".hta", L".htc",
+			L".inf", L".ins", L".isp", L".its",
+			L".jar", L".jnlp", L".js", L".jse",
+			L".ksh",
+			L".xls", L".xlsm", /* spreadsheets can contain macros and easily social engineer people */
+			L".lnk",
+			L".mad", L".maf", L".mag", L".mam", L".maq", L".mar", L".mas", L".mat", L".mau", L".mav", L".maw", L".mcf", L".mda", L".mdb", L".mde", L".mdt", L".mdw", L".mdz", L".mht", L".mhtml", L".ms", L".msc", L".msh", L".msh1", L".msh1xml", L".msh2", L".msh2xml", L".mshxml", L".msi", L".msp", L".mst", L".msu",
+			L".ops", L".osd",
+			L".pcd", L".pif", L".pl", L".plg", L".prf", L".prg", L".printerexport", L".ps1", L".ps1xml", L".ps2", L".ps2xml", L".psc1", L".psc2", L".psd1", L".psdm1", L".psdm1cdxml", L".pssc", L".pst", L".py", L".pyc", L".pyo", L".pyw", L".pyz", L".pyzw",
+			L".reg",
+			L".scf", L".scr", L".sct", L".settingcontent", L".shb", L".shs",
+			L".theme", L".tmp",
+			L".udl", L".url",
+			L".vb", L".vbe", L".vbp", L".vbs", L".vsmacros", L".vss", L".vst", L".vsw",
+			L".webpnp", L".website", L".ws", L".wsb", L".wsc", L".wsf", L".wsh",
+			L".xbap", L".xll", L".xml", L".xnk",
+			// archive formats simply it would render above redundant, and quite frankly a blacklist system is flawed and you can't catch them all
+			L".tar",
+			L".gz",
+			L".zip",
+			L".7z",
+			L".lzma",
+			L".lz4",
+			L".xz",
+			L".cab",
+			L".rar",
+			L".wim",
+			L".iso",
+			L".img"
+		};
+
+		for (auto& o_ext : blacklisted_extensions)
+		{
+			if (ext == o_ext)
+			{
 				return false;
+			}
+		}
+#endif
 
 		if ((ext.size() != 1) && (ext[0] == L'.') && (*(ext.end() - 1) == L' ')) return false;
 		if ((ext.size() != 1) && (ext[0] == L'.') && (*(ext.end() - 1) != L' ')) return true;
